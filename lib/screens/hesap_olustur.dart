@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kilo_analiz_uygulamasi/services/yetkilendirme_servisi.dart';
+import 'package:provider/provider.dart';
 
 class HesapOlustur extends StatefulWidget {
   @override
@@ -142,6 +143,8 @@ class _HesapOlusturState extends State<HesapOlustur> {
   }
 
   Future<void> _kullaniciOlustur() async {
+    final _yetkilendirmeServisi =
+        Provider.of<YetkilendirmeServisi>(context, listen: false);
     var _formState = _formAnahtari.currentState;
     if (_formState.validate()) {
       _formState.save();
@@ -149,21 +152,19 @@ class _HesapOlusturState extends State<HesapOlustur> {
         loading = true;
       });
       try {
-        await YetkilendirmeServisi().mailIleKayit(email, sifre);
+        await _yetkilendirmeServisi.mailIleKayit(email, sifre);
         Navigator.pop(context);
       } catch (hata) {
         print(hata.code);
-        String hataMesaji = uyariGoster(hataKodu: hata.code);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(hataMesaji),
-          ),
-        );
+        setState(() {
+          loading = false;
+        });
+        uyariGoster(hataKodu: hata.code);
       }
     }
   }
 
-  String uyariGoster({hataKodu}) {
+  uyariGoster({hataKodu}) {
     String hataMesaji = "";
 
     if (hataKodu == "email-already-in-use") {
@@ -171,11 +172,14 @@ class _HesapOlusturState extends State<HesapOlustur> {
     } else if (hataKodu == "invalid-email") {
       hataMesaji = "Girdiğiniz mail adresi geçersizdir";
     } else if (hataKodu == "operation-not-allowed") {
-      hataMesaji = "Gir3";
+      hataMesaji = "İşleme izin verilemiyor.";
     } else if (hataKodu == "weak-password") {
       hataMesaji = "Daha zor bir şifre tercih edin";
     }
-
-    return hataMesaji;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(hataMesaji),
+      ),
+    );
   }
 }
