@@ -137,22 +137,6 @@ class _HesapOlusturState extends State<HesapOlustur> {
                         ),
                       ),
                     ),
-                    Container(
-                      width: double.infinity,
-                      child: FlatButton(
-                        color: Theme.of(context).primaryColor,
-                        onPressed: () {
-                          FocusScope.of(context).requestFocus(FocusNode());
-                        },
-                        child: Text(
-                          "Deneme",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    )
                   ],
                 ),
               ),

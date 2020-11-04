@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Material App',
+        title: 'Kilo Takip',
         theme: ThemeData.dark(),
         home: Yonlendirme(),
       ),

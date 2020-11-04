@@ -162,9 +162,10 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
             child: Text(
               "Google Ile Giris Yap",
               style: TextStyle(
-                  fontSize: 19,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.redAccent),
+                fontSize: 19,
+                fontWeight: FontWeight.bold,
+                color: Colors.redAccent,
+              ),
             ),
           )),
           SizedBox(
@@ -228,7 +229,6 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
           );
         }
       }
-      print(kullanici.fotoUrl);
     } catch (hata) {
       setState(() {
         loading = false;
@@ -258,13 +258,3 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
     );
   }
 }
-/*
-**invalid-email**:
-Thrown if the email address is not valid.
-**user-disabled**:
-Thrown if the user corresponding to the given email has been disabled.
-**user-not-found**:
-Thrown if there is no user corresponding to the given email.
-**wrong-password**:
-Thrown if the password is invalid for the given email, or the account corresponding to the email does not have a password set.
- */

@@ -5,6 +5,7 @@ import 'package:kilo_analiz_uygulamasi/models/kullanici.dart';
 class YetkilendirmeServisi {
   //Authectication Objesi
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  static GoogleSignIn _googleSignIn = GoogleSignIn();
 
   //Yeni bir kullanici olusturmayi saglar
   Kullanici _kullaniciOlustur(User kullanici) {
@@ -29,11 +30,14 @@ class YetkilendirmeServisi {
   }
 
   Future<void> cikisYap() async {
-    return await _firebaseAuth.signOut();
+    await _firebaseAuth.signOut();//Google icin tek basina yeterli degil.
+    //await FirebaseAuth.instance.signOut();
+    await _googleSignIn.signOut();
   }
 
   Future<Kullanici> googleIleGiris(String eposta, String sifre) async {
-    GoogleSignInAccount googleHesabi = await GoogleSignIn().signIn();
+    //  GoogleSignInAccount googleHesabi = await GoogleSignIn().signIn();
+    GoogleSignInAccount googleHesabi = await _googleSignIn.signIn();
     GoogleSignInAuthentication googleYetkiKartim =
         await googleHesabi.authentication;
     OAuthCredential sifresizGirisBelgesi = GoogleAuthProvider.credential(
