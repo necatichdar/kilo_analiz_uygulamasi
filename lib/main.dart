@@ -12,6 +12,7 @@ import 'models/models.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  print("deneme");
   runApp(MyApp());
 }
 
