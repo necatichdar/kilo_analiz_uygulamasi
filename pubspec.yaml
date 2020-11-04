@@ -28,6 +28,7 @@ dependencies:
   cloud_firestore:
   provider:
   font_awesome_flutter: ^8.10.0
+  equatable: ^1.2.5
 #  image_picker:
 #  shared_preferences:
 #  firebase_storage:
