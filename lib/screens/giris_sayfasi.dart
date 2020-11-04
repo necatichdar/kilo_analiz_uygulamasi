@@ -156,7 +156,7 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
             onTap: googleIleGiris,
             child: Text(
               "Google Ile Giris Yap",
-              style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold,color: Colors.redAccent),
             ),
           )),
           SizedBox(
