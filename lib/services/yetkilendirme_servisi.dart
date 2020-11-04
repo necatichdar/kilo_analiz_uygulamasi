@@ -6,6 +6,7 @@ class YetkilendirmeServisi {
   //Authectication Objesi
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   static GoogleSignIn _googleSignIn = GoogleSignIn();
+  String aktifKullaniciId;
 
   //Yeni bir kullanici olusturmayi saglar
   Kullanici _kullaniciOlustur(User kullanici) {

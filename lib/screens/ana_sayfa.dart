@@ -3,9 +3,10 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:kilo_analiz_uygulamasi/screens/anasayfa/page_five.dart';
 import 'package:kilo_analiz_uygulamasi/screens/anasayfa/page_four.dart';
-import 'package:kilo_analiz_uygulamasi/screens/anasayfa/page_one.dart';
 import 'package:kilo_analiz_uygulamasi/screens/anasayfa/page_three.dart';
 import 'package:kilo_analiz_uygulamasi/screens/anasayfa/page_two.dart';
+import 'package:kilo_analiz_uygulamasi/services/yetkilendirme_servisi.dart';
+import 'package:provider/provider.dart';
 
 class AnaSayfa extends StatefulWidget {
   @override
@@ -30,6 +31,8 @@ class _AnaSayfaState extends State<AnaSayfa> {
 
   @override
   Widget build(BuildContext context) {
+    String aktifKullaniciId =
+        Provider.of<YetkilendirmeServisi>(context).aktifKullaniciId;
     return Scaffold(
       bottomNavigationBar: new Container(
         height: 70.0,
@@ -85,11 +88,13 @@ class _AnaSayfaState extends State<AnaSayfa> {
           });
         },
         children: [
-          PageFive(),
+          PageFive(profilSahibiId: aktifKullaniciId),
           PageTwo(),
           PageThree(),
           PageFour(),
-          PageFive(),
+          PageFive(
+            profilSahibiId: aktifKullaniciId,
+          ),
         ],
       ),
     );
