@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kilo_analiz_uygulamasi/models/kullanici.dart';
 
 class YetkilendirmeServisi {
@@ -29,5 +30,17 @@ class YetkilendirmeServisi {
 
   Future<void> cikisYap() async {
     return await _firebaseAuth.signOut();
+  }
+
+  Future<Kullanici> googleIleGiris(String eposta, String sifre) async {
+    GoogleSignInAccount googleHesabi = await GoogleSignIn().signIn();
+    GoogleSignInAuthentication googleYetkiKartim =
+        await googleHesabi.authentication;
+    OAuthCredential sifresizGirisBelgesi = GoogleAuthProvider.credential(
+        accessToken: googleYetkiKartim.accessToken,
+        idToken: googleYetkiKartim.idToken);
+    UserCredential girisKarti =
+        await _firebaseAuth.signInWithCredential(sifresizGirisBelgesi);
+    return _kullaniciOlustur(girisKarti.user);
   }
 }

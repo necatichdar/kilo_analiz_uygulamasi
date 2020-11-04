@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kilo_analiz_uygulamasi/screens/hesap_olustur.dart';
+import 'package:kilo_analiz_uygulamasi/services/yetkilendirme_servisi.dart';
+import 'package:provider/provider.dart';
 
 class GirisSayfasi extends StatefulWidget {
   @override
@@ -11,6 +13,7 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
   final _formAnahtari = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   bool loading = false;
+  String email, sifre;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +53,8 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
             height: 0,
           ),
           TextFormField(
-            autocorrect: true, //Otomatik Tamamlama
+            autocorrect: true,
+            //Otomatik Tamamlama
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
               hintText: "E-mail adresini giriniz",
@@ -71,12 +75,14 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
               }
               return null;
             },
+            onSaved: (newValue) => email = newValue,
           ),
           SizedBox(
             height: 20,
           ),
           TextFormField(
-            autocorrect: true, //Otomatik Tamamlama
+            autocorrect: true,
+            //Otomatik Tamamlama
             obscureText: true,
             decoration: InputDecoration(
               hintText: "Şifreyi giriniz",
@@ -96,6 +102,7 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
               }
               return null;
             },
+            onSaved: (newValue) => sifre = newValue,
           ),
           SizedBox(
             height: 20,
@@ -145,9 +152,12 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
             height: 20,
           ),
           Center(
-              child: Text(
-            "Google Ile Giris Yap",
-            style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+              child: InkWell(
+            onTap: googleIleGiris,
+            child: Text(
+              "Google Ile Giris Yap",
+              style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+            ),
           )),
           SizedBox(
             height: 20,
@@ -161,16 +171,77 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
     );
   }
 
-  void _girisYap() {
-    if (_formAnahtari.currentState.validate()) {
+  Future<void> _girisYap() async {
+    final _yetkilendirmeServisi =
+        Provider.of<YetkilendirmeServisi>(context, listen: false);
+    var _formState = _formAnahtari.currentState;
+    if (_formState.validate()) {
+      _formState.save();
       print("Giris islemi yapilabilir.");
+
       setState(() {
         loading = true;
       });
+      try {
+        await _yetkilendirmeServisi.mailIleGiris(email, sifre);
+      } catch (hata) {
+        setState(() {
+          loading = false;
+        });
+        uyariGoster(hataKodu: hata.code);
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Oturum Açılamadı"),
+        content: Text("Lütfen alanları doldurunuz."),
       ));
     }
   }
+
+  void googleIleGiris() async {
+    final _yetkilendirmeServisi =
+        Provider.of<YetkilendirmeServisi>(context, listen: false);
+
+    setState(() {
+      loading = true;
+    });
+    try{
+      await _yetkilendirmeServisi.googleIleGiris(email, sifre);
+    }catch(hata){
+      setState(() {
+        loading = false;
+      });
+      uyariGoster(hataKodu: hata.code);
+    }
+  }
+
+  uyariGoster({hataKodu}) {
+    String hataMesaji = "";
+
+    if (hataKodu == "user-disabled") {
+      hataMesaji = "Kullanıcı devre dışı.";
+    } else if (hataKodu == "invalid-email") {
+      hataMesaji = "Girdiğiniz mail adresi geçersizdir";
+    } else if (hataKodu == "user-not-found") {
+      hataMesaji = "Girilen kullanıcı adı hatalı";
+    } else if (hataKodu == "wrong-password") {
+      hataMesaji = "Girilen şifre hatalı";
+    } else {
+      hataMesaji = "Tanımlanamayan bir hata oluştu";
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(hataMesaji),
+      ),
+    );
+  }
 }
+/*
+**invalid-email**:
+Thrown if the email address is not valid.
+**user-disabled**:
+Thrown if the user corresponding to the given email has been disabled.
+**user-not-found**:
+Thrown if there is no user corresponding to the given email.
+**wrong-password**:
+Thrown if the password is invalid for the given email, or the account corresponding to the email does not have a password set.
+ */

@@ -175,6 +175,8 @@ class _HesapOlusturState extends State<HesapOlustur> {
       hataMesaji = "İşleme izin verilemiyor.";
     } else if (hataKodu == "weak-password") {
       hataMesaji = "Daha zor bir şifre tercih edin";
+    } else {
+      hataMesaji = "Tanımlanamayan bir hata oluştu";
     }
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
