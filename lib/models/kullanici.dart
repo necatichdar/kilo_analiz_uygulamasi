@@ -25,6 +25,7 @@ class Kullanici {
   }
 
   //Dokumandan kullanici objesi uretir.
+  //Firestore da kayitli kullaniciyi Kullaniciya atar.
   factory Kullanici.dokumandanUret(DocumentSnapshot doc) {
     return Kullanici(
       id : doc.id,

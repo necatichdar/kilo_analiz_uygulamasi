@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:kilo_analiz_uygulamasi/models/kullanici.dart';
 import 'package:kilo_analiz_uygulamasi/screens/hesap_olustur.dart';
+import 'package:kilo_analiz_uygulamasi/services/firestore_servisi.dart';
 import 'package:kilo_analiz_uygulamasi/services/yetkilendirme_servisi.dart';
 import 'package:provider/provider.dart';
 
@@ -18,13 +20,16 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      key: _scaffoldKey,
-      body: Stack(
-        children: [
-          _sayfaElemanlari(size),
-          _loadingAnimation(),
-        ],
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+      child: Scaffold(
+        key: _scaffoldKey,
+        body: Stack(
+          children: [
+            _sayfaElemanlari(size),
+            _loadingAnimation(),
+          ],
+        ),
       ),
     );
   }
@@ -156,7 +161,10 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
             onTap: googleIleGiris,
             child: Text(
               "Google Ile Giris Yap",
-              style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold,color: Colors.redAccent),
+              style: TextStyle(
+                  fontSize: 19,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent),
             ),
           )),
           SizedBox(
@@ -204,9 +212,24 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
     setState(() {
       loading = true;
     });
-    try{
-      await _yetkilendirmeServisi.googleIleGiris(email, sifre);
-    }catch(hata){
+    try {
+      Kullanici kullanici =
+          await _yetkilendirmeServisi.googleIleGiris(email, sifre);
+      if (kullanici != null) {
+        Kullanici firestoreKullanici =
+            await FirestoreServisi().kullaniciGetir(kullanici.id);
+        if (firestoreKullanici == null) {
+          //Kullanici veritabaninda kayitli degilse olusturur aksi halde olusturmaz
+          FirestoreServisi().kullaniciOlustur(
+            id: kullanici.id,
+            email: kullanici.email,
+            kullaniciAdi: kullanici.kullaniciAdi,
+            fotoUrl: kullanici.fotoUrl,
+          );
+        }
+      }
+      print(kullanici.fotoUrl);
+    } catch (hata) {
       setState(() {
         loading = false;
       });
