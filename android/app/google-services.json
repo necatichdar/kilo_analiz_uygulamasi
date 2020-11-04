@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "991121135845",
+    "firebase_url": "https://kiloanalizuygulamasi.firebaseio.com",
+    "project_id": "kiloanalizuygulamasi",
+    "storage_bucket": "kiloanalizuygulamasi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:991121135845:android:da8da3ef18c7c6935a1c0c",
+        "android_client_info": {
+          "package_name": "com.example.kilo_analiz_uygulamasi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "991121135845-m3phfesbisg84on51s3p8i2gik0a6cn4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.kilo_analiz_uygulamasi",
+            "certificate_hash": "1e26a0db29e7169f83965f6a1672904243eee51e"
+          }
+        },
+        {
+          "client_id": "991121135845-l30365jtt2pmm92s1pjtl0qdhegrc5j5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBICVtrBjzLU3trBFVObZK8r5cLnBYEDZg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "991121135845-l30365jtt2pmm92s1pjtl0qdhegrc5j5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
