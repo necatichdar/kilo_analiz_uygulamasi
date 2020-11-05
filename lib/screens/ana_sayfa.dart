@@ -46,9 +46,9 @@ class _AnaSayfaState extends State<AnaSayfa> {
           onTap: (value) {
             setState(() {
               _aktifSayfaNo = value;
-              // _pageController.jumpToPage(value);
-              _pageController.animateToPage(value,
-                  curve: Curves.easeOutExpo, duration: Duration(seconds: 1));
+              _pageController.jumpToPage(value);
+              // _pageController.animateToPage(value,
+              //     curve: Curves.easeOutExpo, duration: Duration(seconds: 1));
             });
           },
           items: [
@@ -80,7 +80,7 @@ class _AnaSayfaState extends State<AnaSayfa> {
       ),
       body: PageView(
         scrollDirection: Axis.horizontal,
-        physics: ScrollPhysics(),
+        physics: NeverScrollableScrollPhysics(),
         controller: _pageController,
         onPageChanged: (value) {
           setState(() {

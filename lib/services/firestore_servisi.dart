@@ -7,6 +7,8 @@ class FirestoreServisi {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final DateTime zaman = DateTime.now();
 
+
+
   kullaniciOlustur({id, email, kullaniciAdi, fotoUrl = ""}) async {
     await _firestore.collection("users").doc(id).set({
       "kullaniciAdi": kullaniciAdi,
@@ -26,4 +28,24 @@ class FirestoreServisi {
     }
     return null;
   }
+
+  Future<int> takipciSayisi(kullaniciId) async {
+    QuerySnapshot snapshot = await _firestore
+        .collection("takipciler")
+        .doc(kullaniciId)
+        .collection("kullanicininTakipcileri")
+        .get();
+    print("Takipçi ${snapshot.docs.length}");
+    return snapshot.docs.length;
+  }
+  Future<int> takipEdilenSayisi(kullaniciId) async {
+    QuerySnapshot snapshot = await _firestore
+        .collection("takipedilenler")
+        .doc(kullaniciId)
+        .collection("kullanicininTakipleri")
+        .get();
+    print("Takip ${snapshot.docs.length}");
+    return snapshot.docs.length;
+  }
+
 }

@@ -16,15 +16,18 @@ class Yonlendirme extends StatelessWidget {
       builder: (context, snapshot) {
         //Baglanti Bekleniyorsa
         if (snapshot.connectionState == ConnectionState.waiting) {
+          print("Baglanti Bekleniyor");
           return Scaffold(body: Center(child: CircularProgressIndicator()));
         }
 
         //Kullanici Objesi Varsa
         if (snapshot.hasData) {
+          print("Kullanici var");
           Kullanici aktifKullanici = snapshot.data;
           _yetkilendirmeServisi.aktifKullaniciId = aktifKullanici.id;
           return AnaSayfa();
         } else {
+          print("Giris Sayfasi");
           return GirisSayfasi();
         }
       },

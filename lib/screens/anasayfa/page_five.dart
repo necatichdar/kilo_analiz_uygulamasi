@@ -14,6 +14,45 @@ class PageFive extends StatefulWidget {
 }
 
 class _PageFiveState extends State<PageFive> {
+  int _gonderiSayisi = 0;
+  int _takipci = 0;
+  int _takipEdilen = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _takipciSayisiGetir();
+    _takipEdilenSayisiGetir();
+  }
+
+  _takipciSayisiGetir() async {
+    try {
+      int takipciSayisi =
+          await FirestoreServisi().takipciSayisi(widget.profilSahibiId);
+      if (mounted) {
+        setState(() {
+          _takipci = takipciSayisi;
+        });
+      }
+    } catch (hata) {
+      print(hata.code);
+    }
+  }
+
+  _takipEdilenSayisiGetir() async {
+    try {
+      int takipEdilenSayisi =
+          await FirestoreServisi().takipEdilenSayisi(widget.profilSahibiId);
+      if (mounted) {
+        setState(() {
+          _takipEdilen = takipEdilenSayisi;
+        });
+      }
+    } catch (hata) {
+      print(hata.code);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -29,26 +68,20 @@ class _PageFiveState extends State<PageFive> {
           ),
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          setState(() {});
-          return await Future.delayed(Duration(seconds: 1));
-        },
-        child: FutureBuilder<Object>(
-            future: FirestoreServisi().kullaniciGetir(widget.profilSahibiId),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              return ListView(
-                children: [
-                  _profilDetaylari(snapshot.data),
-                ],
+      body: FutureBuilder<Object>(
+          future: FirestoreServisi().kullaniciGetir(widget.profilSahibiId),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Center(
+                child: CircularProgressIndicator(),
               );
-            }),
-      ),
+            }
+            return ListView(
+              children: [
+                _profilDetaylari(snapshot.data),
+              ],
+            );
+          }),
     );
   }
 
@@ -63,7 +96,7 @@ class _PageFiveState extends State<PageFive> {
               CircleAvatar(
                 backgroundColor: Colors.red,
                 radius: 50,
-                backgroundImage: profildata.fotoUrl.isEmpty
+                backgroundImage: profildata.fotoUrl.isNotEmpty
                     ? NetworkImage(profildata.fotoUrl)
                     : AssetImage("assets/images/defaultprofillogo.png"),
               ),
@@ -71,9 +104,9 @@ class _PageFiveState extends State<PageFive> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _sayac(baslik: "Gönderiler", sayi: 20),
-                    _sayac(baslik: "Takipçi", sayi: 384),
-                    _sayac(baslik: "Takip", sayi: 22),
+                    _sayac(baslik: "Gönderiler", sayi: _gonderiSayisi),
+                    _sayac(baslik: "Takipçi", sayi: _takipci),
+                    _sayac(baslik: "Takip", sayi: _takipEdilen),
                   ],
                 ),
               )
